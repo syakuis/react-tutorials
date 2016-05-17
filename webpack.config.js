@@ -5,7 +5,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 
-	entry: './src/GuestBook.jsx',
+	entry: './src/index.js',
 
 	output: {
 		path: './dist',
@@ -22,8 +22,8 @@ module.exports = {
 	module: {
 		loaders: [
 			{
-				test: [/\.jsx$/],
-				exclude: [ /node_modules/, /bower_components/ ],
+				test: [/\.jsx$/,/\.js$/],
+				include: [ /src/ ],
 				loader: 'babel',
 				query: {
 					presets: ['react', 'es2015', 'stage-1']

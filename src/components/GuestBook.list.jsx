@@ -13,9 +13,8 @@ class GuestBookList extends Component {
 	}
 
 	state = {
-		target: -1,
-		memo: '',
-		data: null
+		id: -1,
+		memo: ''
 	}
 
 	handleKeyDown(event) {
@@ -28,24 +27,26 @@ class GuestBookList extends Component {
 		this.setState({ memo: event.target.value });
 	}
 
-	handleDubleClick(index, data) {
-		this.setState({ target: index, memo: data.memo, data: data });
+	handleDubleClick(id, memo) {
+		this.setState({ id: id, memo: memo });
 	}
 
 	handleClickPostUpdate() {
-		let data = this.state.data;
-		let up = { ...data, memo: this.state.memo };
-		this.props.onClickPostUpdate(data, up);
-		this.setState({target: -1, memo: ''});
+		this.props.onClickPostUpdate(this.state.id, this.state.memo);
+		this.setState({id: -1, memo: ''});
+	}
+
+	handleClickPostDelete(id) {
+		this.props.onClickPostDelete(id);
 	}
 
 	render () {
-		var target = this.state.target;
+		var id = this.state.id;
 
-		let items = this.props.data.map((data, i) => {
+		let items = this.props.data.map((data) => {
 				let item;
 
-				if (target === i) {
+				if (id === data.id) {
 					item = (
 						<div className="input-group">
 							<input type="text" className="form-control" placeholder="내용을 입력하세요."
@@ -61,14 +62,14 @@ class GuestBookList extends Component {
 				} else {
 					item = (
 						<div>
-							<button type="button" className="close" onClick={() => this.props.onClickPostDelete(i)}><span>&times;</span></button>
+							<button type="button" className="close" onClick={() => this.handleClickPostDelete(data.id)}><span>&times;</span></button>
 							<i className="fa fa-comments"></i> {data.memo}
 						</div>
 					);
 				}
 
 				return(
-					<li className="list-group-item" key={i} onDoubleClick={() => this.handleDubleClick(i, data)}>
+					<li className="list-group-item" key={data.id} onDoubleClick={() => this.handleDubleClick(data.id, data.memo)}>
 					{item}
 					</li>
 				);
