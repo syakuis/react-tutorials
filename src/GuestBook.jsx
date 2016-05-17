@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Datetimepicker from './components/Datetimepicker.jsx';
+import GuestBookPost from './components/GuestBook.post.jsx';
+import GuestBookList from './components/GuestBook.list.jsx';
 
 class GuestBook {
 	static main() {
@@ -13,21 +16,20 @@ class GuestBook {
 				};
 			},
 
-			handleChange(event) {
-				this.setState({ memo: event.target.value });
+			setData(data) {
+				return {
+					id: this.state.data.length - 1,
+					...data
+				};
 			},
 
-			handleKeyDown(event) {
-				if (event.keyCode !== 13) return;
-				event.preventDefault();
-				this.handleClick();
+			storeMemoUpdate(memo) {
+				this.setState({ memo: memo });
 			},
 
-			handleClick(event) {
+			storeDataAdd() {
 				let data = this.state.data;
-				let memo = this.state.memo;
-
-				if (memo === '' || memo === null || memo === undefined) return;
+				let memo = this.setData({ memo: this.state.memo });
 
 				this.setState({
 					memo: '',
@@ -35,59 +37,72 @@ class GuestBook {
 				});
 			},
 
-			deleteItemOne(key) {
-				let data = this.state.data;
-				data.splice(key, 1);
-
-				this.setState({
-					memo: '',
-					data: data
+			storeDataUpdate(data, up) {
+				let datas = this.state.data.map(candidate => {
+					return candidate !== data ? candidate : up;
 				});
+
+				this.setState({ data: datas });
+			},
+
+			storeDataDelete(index) {
+				let data = this.state.data;
+				data.splice(index, 1);
+
+				this.setState({ data: data });
+			},
+
+			handleChangePost(event) {
+				this.storeMemoUpdate(event.target.value);
+			},
+
+			handleClickPostAdd(event) {
+				let memo = this.state.memo;
+				if (memo === '' || memo === null || memo === undefined) return;
+				this.storeDataAdd();
+			},
+
+			handleClickPostUpdate(data, up) {
+				this.storeDataUpdate(data, up);
+			},
+
+			handleClickPostDelete(index) {
+				this.storeDataDelete(index);
+			},
+
+			handleClick() {
+				console.log('부모 이벤트 클릭!!');
+				this.refs.datetimepicker.handleClick();
 			},
 
 			render() {
 
-				let items = this.state.data.map((v, i) => {
-						return(
-							<li className="list-group-item" key={i}>
-								<button type="button" className="close" onClick={() => this.deleteItemOne(i)}><span>&times;</span></button>
-								<i className="fa fa-comments" aria-hidden="true"></i> {v}
-							</li>
-						);
-				});
-
-				let display = (
-					<div>
-						<p></p>
-						<div className="alert alert-success">
-							{this.state.memo} ({this.state.memo.length})
-						</div>
-					</div>
-				);
-
 				return (
 					<div className="container">
-						<h1>Guest Book</h1>
-						<form>
-							<div className="input-group">
-								<input type="text" className="form-control" placeholder="내용을 입력하세요."
-									onChange={this.handleChange}
-									onKeyDown={this.handleKeyDown}
-									autoFocus={true}
-									value={this.state.memo} />
-								<span className="input-group-btn">
-									<button className="btn btn-success" type="button" onClick={this.handleClick}>등록</button>
-								</span>
-							</div>
-						</form>
-
-						{display}
+						<h1>Guest Book ({this.state.data.length})</h1>
+						<GuestBookPost
+							onClickPostAdd={this.handleClickPostAdd}
+							onChangePost={this.handleChangePost}
+							memo={this.state.memo} />
 
 						<hr />
 
-						<ul className="list-group">
-							{items}
-						</ul>
+						<Datetimepicker ref="datetimepicker">
+								<div className='input-group date' data-jquery='datetimepicker'>
+									<input type='text' className="form-control"/>
+									<span className="input-group-addon">
+										<span className="glyphicon glyphicon-calendar"></span>
+									</span>
+								</div>
+								<div className="text-right" style={{ marginTop: 10, marginBooton: 10 }}>
+									<button className="btn btn-default" type="button" onClick={this.handleClick}>자식호출</button>
+								</div>
+						</Datetimepicker>
+
+						<GuestBookList
+							onClickPostDelete={this.handleClickPostDelete}
+							onClickPostUpdate={this.handleClickPostUpdate}
+							data={this.state.data} />
 					</div>
 				);
 			}
