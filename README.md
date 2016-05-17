@@ -1,14 +1,17 @@
-# React Tutorial #1 Install : 리액트 설치
+# React Tutorial #2 Guest Book : 리액트 방명록 만들기
 
-## 개발환경
+### 개발환경
 
 Mac OS X 10.11.14  
 Node.js v0.12.7  
 npm 2.11.3  
-Sublime Text 3  
+Atom 1.7.3  
 
-Blog Post: http://syaku.tistory.com/317  
-GitHub Branch: https://github.com/syakuis/react-tutorial/tree/react-install
+React 15.0.1  
+Babel 6.x.x
+
+Blog Post: http://syaku.tistory.com/318  
+GitHub Branch (프로그램 소스): https://github.com/syakuis/react-tutorial/tree/react-guestbook
 
 ## 관련 글
 
@@ -17,151 +20,218 @@ GitHub Branch: https://github.com/syakuis/react-tutorial/tree/react-install
 3. [React Tutorial #3 Guest Book Refactoring: 리액트 방명록 프로그램 리팩토링](http://syaku.tistory.com/319)
 4. [React Tutorial #4 Guest Book Redux : 리액트 리듀스 방명록 프로그램](http://syaku.tistory.com/320)
 
+### GuestBook 프로그램
 
-## React 
+이번 세션은 어떤식으로 프로그램을 개발하는 지에 대해 좀 더 상세히 알아보는 시간을 가지겠습니다. 그래서 예제로 방명록 프로그램을 직접 개발하여 하나하나 설명하도록 하겠습니다. 다른 새로운 오픈소스나 기술은 사용하지 않고 오직 React만 사용하여 개발하겠습니다. 이후 세션부터는 방명록 예제를 바탕으로 리펙토링을 거쳐 프로그램의 질을 높이는 과정을 내용으로 이어갈 생각입니다.
 
-리액트는 페이스북에서 개발한 자바스크립트 라이브러리입니다. 요즘 프로젝트를 보면 UI에 대한 부분을 많이 신경쓰다보니 자바스크립트 코딩영역도 자연스럽게 많아 졌습니다.  그로인해 자바스크립트 프로그램에 대한 유지보스가 더욱 복잡해졌습니다. 중복되는 함수, 중복되는 변수 어디서 부터 시작되는 지 알 수 없는 난입된 스크립트들... 그래도 원시 DOM을 제어하는 jQuery 덕분에 조금 간결해진 소스를 사용하고 있지만 그래도 복잡한건 여전합니다. 무엇보다 자바스크립트로 인해 발생하는 성능 저하가 근본적인 문제입니다. 이런 문제들을 체계적으로 해결하면서 보다 빠른 퍼포먼스를 지원하고 이전에 개발 방법보다 한층 더 체계적이면서 오류 해결도 쉬운 개발 방법을 제공하는 것이 리액트입니다. 그렇다고 모든 것을 리액트가 하는 것은 아니지만 리액트로 인해 자연스럽게 현대적 기술들을 전목할 수 있는 가이드라인 역활을 하고 있는 것은 분명합니다.
+상단에 소개된 개발환경을 보면 `Sublime Text`가 아니라 [Atom](https://atom.io)으로 변경된 것을 볼 수 있습니다. 무엇이 좋다고 딱히 설명하긴 어렵지만 React를 사용하기에는 Atom의 플러그인 지원이 더 효율적인 것 같아  변경하였습니다. Atom React Plugin 설치하려면 https://orktes.github.io/atom-react 참고하세요.
 
-최근에 AngularJS도 AngularJS 1.x를 계승하지 않고 새롭게 설계된 AngularJS 2를 공개하기도 했습니다. AngularJS 2도 리액트의 기술을 따라가고 있는 상황입니다.
-
-리액트를 사용하면서 처음 혼란스러웠던 것은 이전의 개발은 HTML이 메인베이스라면 여기에 모든 것을 프로그래밍하고 호출하였지만 리액트는 리액트가 메인베이스입니다. 즉 HTML은 칠판이고 분필은 React입니다. 그래서 모든 화면 구성은 리액트에서 관장하며 보내는 것 또한 리액트에서 결정합니다. HTML은 결과를 출력해주는 보더일 뿐입니다. HTML에서 원하는 리액트의 컴포넌트를 맘데로 호출할 수 있는 구조가 아니라는 것입니다.
-
-React의 장점은 HTML 태그를 직접 컴포넌트화 하여 직관적으로 사용할 수 있는 것과 HTML DOM을 직접 사용하지 않고 React에서 제어할 수 있는 가상 DOM을 만들어 최적화된 결과를 HTML에 전달하므로 속도를 개선한부분입니다.
-
-## React 설치 및 개발환경 구성
-
-[React](https://facebook.github.io/react/index.html)를 설치하기 위해 [npm](https://www.npmjs.com)패키지 관리자를 필요합니다. 필수는 아니지만 다양한 패키지를 관리할때 편리합니다. npm은 [Node.js](https://nodejs.org)에 포함되어 있으므로  Node.js를 설치하면 됩니다.
-
-React 최신버전(15.0.1)은 [Babel](http://babeljs.io)에 의존하고 있습니다. 현대적 자바스크립트 기술을 지원하는 개발 도구이며 어떠한 브라우저 환경에서든 최적의 상태로 동작될 수 있게 컴파일합니다. 도움말을 보면 Babel을 이용하여 컴파일없이 바로 실행될 수 있게 babel-browser을 사용하고 있지만 React의 처리 속도를 고려한다면 컴파일 방식이 효율적입니다. 그래서 저는 컴파일 방식을 이용할 것이고, `ES2015` 문법으로 개발할 것입니다.
-
-ES2015란 자바스크립트 표준 규격입니다. 우리는 주로 ECMAScript 5를 사용해왔습니다. 현재도 그렇게 사용하고 있습니다. 하지만 좀 더 고도화된 기술을 요하는 작업들이 많아지면서 이런 기술들을 대응하기 위해 개선된 표준 규격을 발표하는 데 이것이 ECMAScript 6이며 ECMAScript 6를 ES2015라고 변경하여 부르기로 하여 최종 명칭은 ES2015라고 합니다. ECMAScript 7은 ES2016이라고 부릅니다.
-
-[참고] https://developer.mozilla.org/ko/docs/Web/JavaScript/JavaScript_technologies_overview
-
-Node.js와 npm을 설치한 상태에서 아래의 작업을 진행합니다.
+그리고 JSX에서 ES2015 문법을 기본적으로 사용하지만 ES2015+ 문법을 사용할 경우도 있기에 `babel-preset-stage-2` 플러그인을 추가해야 합니다.
 
 ```
-$ npm init
+$ npm install -D babel-preset-stage-2
 ```
-프로젝트를 생성하려는 폴더에서 npm 패키지 생성합니다. 중요한 설정은 아니니 대충 입력합니다. 생성한 패키지 정보는 아래와 같습니다.
 
-**< / > package.json**
-
-```
-{
-  "name": "react-tutorial",
-  "version": "1.0.0",
-  "description": "ReactJS Tutorial",
-  "main": "bundle.js",
-  "scripts": {
-  },
-  "keywords": [
-    "react"
-  ],
-  "author": "Syaku <http://syaku.tistory.com> (최석균)",
-  "license": "MIT"
-}
-```
-다음은 React 개발에 필요한 패키지를 설치합니다.
-
-```
-$ sudo npm install -D babel-core babel-loader babel-preset-es2015 babel-preset-react webpack webpack-dev-server html-webpack-plugin
-```
-`-D` 옵션은 개발자 의존성에 패키지를 정의합니다. [webpack](https://webpack.github.io)은 여러 자바스크립트들을 모듈화하여 관리할 수 있게 하는 빌드형 개발툴입니다. React 개발시 아주 유용한 개발툴입니다. 이제 React를 설치합니다.
-
-```
-$ npm install -S react react-dom
-```
-설치가 완료되면 React를 이용하여 `Hello World!!`를 출력하는 예제 프로그램을 만들어 보겠습니다.
-
-그리고 추천드리는 에디터는 [Sublime Text](https://www.sublimetext.com)와 [Atom](https://atom.io) 혹은 [Jetbrains](https://www.jetbrains.com/)과 같은 플러그인을 쉽게 설치하여 다양한 언어를 지원하는 개발툴을 사용하는 것이 좋습니다. 본 튜토리얼에는 Sublime Text 3를 사용하였습니다. React와 Bebel 플로그인을 설치하면 개발에 많은 도움이 됩니다.
-
-React 예제의 폴더구조는 아래와 같습니다. 임의적으로 정한거니 꼭 이렇게 해야하는 건 아닙니다. 컴파일 될 소스는 src 폴더에 컴파일 된 소스는 dist 폴더에 생성됩니다.
-
-```
-/react-tutorial/
-	|- src/
-		|- js/
-			|- HelloWorld.jsx
-		|- index.html
-	|- dist/
-		|- bundle.js		
-	|- webpack.config.js
-	|- package.json
-```	
-
-HelloWorld.jsx는 React 사용자 인터페이스 프로그램하는 파일이며 컴파일 되기 전의 소스입니다. 꼭 확장자를 jsx를 하지 않아도 됩니다. 전 React 소스파일만 따로 구분하기 위해 jsx라고 하였습니다. 컴파일되면 dist 폴더 아래 bundle.js가 생성됩니다. 이것은 webpack에 의해 생성되는 것입니다. webpack은 JSX 파일을 컴파일하며, 플러그인을 이용하여 임시의 웹서버를 구동할 수 있어 개발에 유용한 기능들을 제공합니다. 
-
-webpack을 사용하기 위해 설정파일을 만들어야 합니다. 그리고 테스트를 위한 임시용 웹서버는 webpack-dev-server 플러그인에서 지원합니다. 소스가 변경되면 자동으로 리로드해주므로 개발시 필수적인 플러그인입니다.
+webpack load할때 stage-2를 추가해줍니다.
 
 **< / > webpack.config.js**
 
-```javascript
+```js
+... Job ...
 
-var path = require('path')
-var webpack = require('webpack')
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+query: {
+	presets: ['react', 'es2015', 'stage-2']
+}
 
-module.exports = {
+... Job ...
 
-	entry: './src/js/HelloWorld.jsx',
+```
+**ES2015(ECMAScript 6)에 대해 아래의 사이트를 참고하시면 도움이됩니다.**
+> React on ES6+ https://babeljs.io/blog/2015/06/07/react-on-es6-plus  
+Learn ES2015 https://babeljs.io/docs/learn-es2015/  
+ES6 ECMAScript 6 — New Features: Overview & Comparison http://es6-features.org
 
-	output: {
-		path: './dist',
-		filename: 'bundle.js'
+디자인 UI 프레임워크은 [bootstrap](http://getbootstrap.com)과 [font-awesome](https://fortawesome.github.io/Font-Awesome) 라이브러리를 사용했습니다. 아래와 같이 설치해주세요.
+
+```
+// Bower 설치 있으면 생략...
+$ sudo npm install -D bower
+
+// 라이브러리 설치
+$ bower update
+```
+
+이미 Bower 패키지로 설치해야할 라이브러리는 `bower.json`에 설정되어 있으니 update 명령어로 설치하시면 됩니다.
+
+튜토리얼을 시작하기 전에 React Docs를 먼저 읽어보시길 바랍니다.
+> 한글 http://reactkr.github.io/react/docs/getting-started-ko-KR.html  
+영문 http://facebook.github.io/react/docs/getting-started.html
+
+이제부터 GuestBook.jsx 소스를 하나하나 설명하겠습니다. Babel es2015를 사용하기 때문에 ECMAScript 6 문법으로 작성되었습니다.
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+```
+React 모듈을 사용하기 위해 ES2015의 import 키워드를 사용해야 한다. ReactDOM API는 최종 JSX를 HTML 영역에 넘겨주는 역활을 하는 것 같은데 정확한 역활은 잘 모르겠네요. 0.14버전에 새로 추가된 API입니다. 추가하고 싶은 모듈(자바스크립트로 작성된 소스)이 있으면 위와 같이 작성하면 됩니다.
+
+React 컴포넌트 클래스를 생성하려면 `React.createClass` 호출해야 합니다. 그리고 render 함수는 클래스 내부에 필수적으로 존재해야 합니다. **클래스 변수명의 첫글자는 꼭 대문자를 사용해야 합니다. JSX는 HTML 태그와 구분하기 위해 첫글자는 대문자로 사용합니다.** 그외에도 JSX에서 사용되는 HTML 엘리먼트들의 이름이 약간식 틀리기때문에 React API 참고하시기 바랍니다.
+
+React에는 2가지의 데이터 방식이 있으며 모든 데이터는 단방향으로 흐릅니다. 즉 한쪽으로 흐르기 때문에 자식과 데이터를 공유하기 위해서는 부모에서 자식으로 데이터를 전달해야 합니다. 2가지 데이터는 `props(properties)`와 `state(stateless)`가 있습니다. props는 한번 값을 정의하면 변경할 수 없는 정적 변수이며 state는 언제든지 변경 할 수 있는 동적 변수입니다. React에서 절대로 변경할 수 없게 제어하는 것이 아니라 개발자가 꼭 이것을 지켜야할 의무가 있다라는 의미로 이해하시기 바랍니다. React에서는 state 사용을 최소화하고 props를 우선적으로 사용을 권장합니다. 그리고 부모의 state 데이터를 자식에게 전달할때는 props 변수에 전달되어야 합니다. 
+
+`getInitialState` 함수는 React Component 클래스의 메서드이며 GuestBook 컴포넌트 클래스가 호출되기전에 딱 한번 호출되며 state 변수를 초기화합니다. memo는 input에 입력한 값을 임시로 저장했다가 등록 이벤트가 호출되면 data 변수에 값이 배열로 저장되게 됩니다.
+
+`render` 함수를 이용하여 최종적으로 컴포넌트화할 수 있습니다. 내부의 소스를 살펴보겠습니다.
+
+목록을 출력하는 items 변수입니다.
+
+```js
+var items = this.state.data.map((v, i) => {
+	return(
+		<li className="list-group-item" key={i}>
+			<button type="button" className="close" onClick={() => this.deleteItemOne(i)}><span>&times;</span></button>
+			<i className="fa fa-comments" aria-hidden="true"></i> {v}
+		</li>
+	);
+});
+```
+
+JSX에서 반복적으로 엘리먼트를 생성할 때는 꼭 `key` 속성을 사용해야 합니다. 그리고 클릭 이벤트 속성에 함수를 사용할때는 `this.deleteItemOne(i)` 하게되면 반복문이  실행되는 동시에 함수가 호출되게 됩니다. 그래서 `{() => this.deleteItemOne(i)}` 처럼 작성하면 클릭 이벤트가 실행될때 함수가 호출되게 됩니다.
+
+Babel es2015에서 함수를 사용할때는 아래와 같이 작성합니다.
+
+```js
+// ECMAScript 6
+var func = v => { return v };
+var func2 = (v, b) => { return v + b };
+
+var obj = {
+	func(v) {
+		return v;
 	},
+	
+	func2(v,b) {
+		return v + b;
+	}
+}
 
-	plugins: [
-		new webpack.HotModuleReplacementPlugin(),
-		new HtmlWebpackPlugin({
-			template: './src/index.html'
-		})
-	],
+// ECMAScript 5
+functon func(v) { return v; }
+functon func2(v, b) { return v + b; }
 
-	module: {
-		loaders: [
-			{
-				test: /\.jsx$/, // 로더를 사용할 확장자를 추가합니다.
-				exclude: /node_modules/, // 로더 사용을 제외한 대상을 추가합니다.
-				loader: 'babel', // 로더를 설정합니다.
-				query: {
-					presets: ['react', 'es2015']
-				}
-			}
-		]
+var obj = {
+	func: function(v) {
+		return v;
 	},
-
-	devServer: {
-		inline: true, // 자동 리로드여부를 선택합니다.
-		hot: true, // html 자동 리로드여부를 선택합니다. (정확한 역활을 모르겠네요)
-		port:8888,
-		contentBase: './' // 서버 웹루트 경로를 설정합니다.
-	},
+	
+	func2: function(v,b) {
+		return v + b;
+	}
 }
 ```
 
-html-webpack-plugin은 html 파일을 dist 폴더에 생성해줍니다. 여기서 중요한 것은 output.path 경로 아래 index.html 파일도 함께 있어야 합니다. 그렇지 않으면  webpack-dev-server에서 변경된 소스를 판단하지 못해 리로드가 되지 않습니다. 이제 빌드하고 서버를 구동해보겠습니다.
-
-npm에서 쉽게 빌드하고 서버를 구동하기 위해 패키지 설정 파일에 아래와 같이 추가합니다.
-
-**< / > package.json**
+items 변수는 `{items}`식으로 JSX에서 사용할 수 있습니다. 아래의 JSX 코드를 살펴겠습니다.
 
 ```
-  "scripts": {
-    "build": "webpack",
-    "server": "webpack-dev-server"
-  },
+<input type="text" className="form-control" placeholder="내용을 입력하세요."
+								onChange={this.handleChange}
+								onKeyDown={this.handleKeyDown}
+								autoFocus={true}
+								value={this.state.memo} />
 ```
 
-npm으로 빌드 및 서버 구동하기.
+value 속성에는 state memo값을 지정해 놓게되면 input에 입력과 동식에 onChange 이벤트가 실행되게 됩니다. 그래서 value 속성을 사용할 경우 onChange 속성도 같이 작성해야 합니다. 
 
-```
-$ npm run build // 빌드할 경우
-$ npm run server // 서버 구동할 경우
+value에 값을 입력하면 handleChange함수가 실행되며 입력받은 값은 `event.target.value`로 얻을 수 있습니다. 그리고 state 데이터에 값을 저장합니다.
+state 데이터에 값을 저장할때는 꼭 아래와 같이 해야합니다.
+
+```js
+this.state.memo = event.target.value; // 잘못된 방식입니다.
+
+this.setState({ memo: event.target.value }); // 올바른 방식입니다.
 ```
 
-빌드후 서버를 구동하고 http://localhost:8888 으로 접속합니다. 페이지가 정상적으로 출력되는 지 확인합니다.  
-그리고 자동리로드가 잘되는 지 HelloWorld.jsx 파일의 소스를 수정해봅니다. 그럼 브라우저를 직접 새로고침하지 않더라도 자동으로 반영되는 것을 확인할 수 있습니다.
+handleChange 함수에서 state 데이터를 저장하고 그 아래 `console.log(this.state);` 로그를 출력해보면 handleChange 함수 내에서는 데이터가 변경되지 않고 외부에서 다시 state 데이터를 호출하면 업데이트된 값을 얻을 수 있다.
+
+그리고 그 아래 등록 버튼이 있습니다. 등록버튼을 클릭하면 handleClick 함수를 호출합니다. 해당 함수에는 입력한 값을 data 배열에 저장하는 역활을 합니다. 아래 코드를 살펴보면 `...` 연사자가 있는 데 이것은 그외 값들을 의미합니다. jQuery extend와 비슷하지만 더 개선된 방식으로 es2015에서 사용할 수 있게 되었습니다.
+
+```js
+this.setState({
+	memo: '',
+	data: [ memo, ...data ]
+});
+```
+
+`...` 연산자를 이용한 예제 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator
+
+```js
+var obj = [1,2,3,4];
+var [one, ...obj] = obj; // one = 1, obj = [2,3,4]
+console.log(one); // 1
+
+var obj_extend = [...obj, {name: 'syaku', site: 'http://syaku.tistory.com'}];
+console.log(obj_extend); // [2,3,4,{name: 'syaku', site: 'http://syaku.tistory.com'}]
+```
+
+위와 같은 결과를 얻을 수 있습니다. 엄청 간결해졌습니다.
+
+**let 과 var의 차이점**
+
+```js
+var x = 'X';
+let y = 'Y';
+console.log(x, y); // X, Y
+{
+  var x = 'XX';
+  let y = 'YY';
+  console.log(x, y); // XX, YY
+  {
+    var x = 'XXX';
+    let y = 'YYY';
+    console.log(x, y); // XXX, YYY
+  }
+  console.log(x, y); // XXX, YY
+}
+console.log(x, y); // XXX, Y
+```
+
+let은 블럭 범위 변수이며 블럭 안에서만 변수의 값을 유지할 수 있습니다.
+
+다음으로 볼 코드는 display에 선언된 JSX 코드 입니다. 이 소스가 중요한 이유는 JSX에서 엘리먼트는 **최상위 엘리먼트 1개만 존재**해야 합니다. 아래와 같이 `<div></div>` 엘리먼트가 최상위 부모가 되고 그 속에 자식 엘리먼트들이 존재하는 것을 볼 수 있습니다.
+
+```js
+let display = (
+	<div>
+		<p></p>
+		<div className="alert alert-success">
+			{this.state.memo} ({this.state.memo.length})
+		</div>
+	</div>
+);
+```
+하지만 아래와 같이 코딩한다면 JSX 문법에 어긋나기때문에 오류가 발생합니다.
+
+```js
+let display = (
+	<p></p>
+	<div className="alert alert-success">
+		{this.state.memo} ({this.state.memo.length})
+	</div>
+);
+```
+
+여기까지 React를 이용한 GuestBook 프로그램을 만들어보았고 그중에서 중요한 부분은 모두 설명한 것 같습니다. 다음 세션에는 본 예제를 이용하여 컴포넌트를 세분화하는 리팩토링과정을 설명할 것입니다. 아마 props 데이터를 직접 사용하는 내용를 볼 수 있을 것 같습니다.
+
+
+
+
+
+
+
+
+
+
+
 
 
 

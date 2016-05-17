@@ -5,11 +5,11 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 
-	entry: './src/js/HelloWorld.jsx',
+	entry: './src/GuestBook.jsx',
 
 	output: {
 		path: './dist',
-		filename: 'bundle.js'
+		filename: "bundle.js"
 	},
 
 	plugins: [
@@ -22,13 +22,13 @@ module.exports = {
 	module: {
 		loaders: [
 			{
-				test: /\.jsx$/,
-				exclude: /node_modules/,
+				test: [/\.jsx$/],
+				exclude: [ /node_modules/, /bower_components/ ],
 				loader: 'babel',
 				query: {
-					presets: ['react', 'es2015']
+					presets: ['react', 'es2015', 'stage-2']
 				}
-			}
+			},
 		]
 	},
 
@@ -37,5 +37,6 @@ module.exports = {
 		hot: true,
 		port:8888,
 		contentBase: './'
-	},
+	}
+
 }
