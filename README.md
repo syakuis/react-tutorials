@@ -8,7 +8,7 @@ npm 2.11.3
 Sublime Text 3  
 
 Blog Post: http://syaku.tistory.com/317  
-GitHub Branch: https://github.com/syakuis/react-tutorial/tree/react-install
+GitHub Branch: https://github.com/syakuis/react-tutorials/tree/react-install
 
 ## 관련 글
 
