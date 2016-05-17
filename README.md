@@ -11,7 +11,7 @@ React 15.0.1
 Babel 6.x.x
 
 Blog Post: http://syaku.tistory.com/318  
-GitHub Branch (프로그램 소스): https://github.com/syakuis/react-tutorial/tree/react-guestbook
+GitHub Branch (프로그램 소스): https://github.com/syakuis/react-tutorials/tree/react-guestbook
 
 ## 관련 글
 
