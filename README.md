@@ -12,7 +12,7 @@ React Redux 4.4.5
 Babel 6.x.x
 
 Blog Post: http://syaku.tistory.com/320  
-GitHub Branch (프로그램 소스): https://github.com/syakuis/react-tutorial/tree/react-guestbook-redux
+GitHub Branch (프로그램 소스): https://github.com/syakuis/react-tutorials/tree/react-guestbook-redux
 
 ## 관련 글
 
